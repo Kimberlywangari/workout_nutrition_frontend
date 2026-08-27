@@ -1,21 +1,18 @@
 import type { Food } from "../types/meal";
-import { API_BASE, authHeaders, handleAuthed } from "./http";
+import { API_BASE, authHeaders, handleAuthed, type PaginatedResponse } from "./http";
 
-interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
-
-export async function fetchFoods(token: string, search = ""): Promise<Food[]> {
+export async function fetchFoods(
+  token: string,
+  { search = "", page = 1, pageSize = 5 }: { search?: string; page?: number; pageSize?: number } = {}
+): Promise<PaginatedResponse<Food>> {
   const url = new URL(`${API_BASE}/foods/`);
   if (search) url.searchParams.set("name", search);
+  url.searchParams.set("page", String(page));
+  url.searchParams.set("page_size", String(pageSize));
 
   const response = await fetch(url, { headers: authHeaders(token) });
   await handleAuthed(response, "Couldn't load foods");
-  const data: PaginatedResponse<Food> = await response.json();
-  return data.results;
+  return response.json();
 }
 
 export async function createFood(

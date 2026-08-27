@@ -3,6 +3,13 @@ export const API_BASE = "http://localhost:8000/api";
 export function authHeaders(token: string): HeadersInit {
   return { "Content-Type": "application/json", Authorization: `Token ${token}` };
 }
+// add this export alongside the existing ApiError / parseErrorResponse / handleAuthed
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
 
 /** Carries the backend's per-field validation messages,
  *  e.g. { calories_per_100g: "Calories cannot be negative." } */

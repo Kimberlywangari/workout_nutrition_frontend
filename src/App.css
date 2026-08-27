@@ -121,3 +121,35 @@ p[style*="color: red"] {
 .auth-card form {
   text-align: left;
 }
+
+.app {
+  position: relative;
+  padding-bottom: 4rem; /* room for the logout button */
+}
+
+.logout-button {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #d0e8d8;
+}
+
+.tabs button {
+  flex: 1;
+  background: #f0f9f2;
+  color: #2d6a4f;
+  border-radius: 0;
+  font-weight: 500;
+}
+
+.tabs button.active {
+  background-color: #52b788;
+  color: white;
+}

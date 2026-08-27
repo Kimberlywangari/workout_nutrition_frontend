@@ -19,6 +19,7 @@ export function PlannedMealForm({ mealPlan, onPlanned }: PlannedMealFormProps) {
   const [mealType, setMealType] = useState<(typeof MEAL_TYPES)[number]>("breakfast");
   const [quantity, setQuantity] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dateError, setDateError] = useState<string | null>(null);
   const [quantityError, setQuantityError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -26,6 +27,11 @@ export function PlannedMealForm({ mealPlan, onPlanned }: PlannedMealFormProps) {
     e.preventDefault();
     if (!token || foodId === "") return;
 
+    // Mirrors PlannedMealSerializer.validate — keep it inside the plan's own dates.
+    if (plannedDate < mealPlan.start_date || plannedDate > mealPlan.end_date) {
+      setDateError(`Date must fall between ${mealPlan.start_date} and ${mealPlan.end_date}.`);
+      return;
+    }
     // Mirrors PlannedMealSerializer.validate_quantity_g
     if (Number(quantity) <= 0) {
       setQuantityError("Quantity must be greater than zero.");
@@ -33,6 +39,7 @@ export function PlannedMealForm({ mealPlan, onPlanned }: PlannedMealFormProps) {
     }
 
     setLoading(true);
+    setDateError(null);
     setQuantityError(null);
     setFormError(null);
     try {
@@ -60,7 +67,15 @@ export function PlannedMealForm({ mealPlan, onPlanned }: PlannedMealFormProps) {
   return (
     <form onSubmit={handleSubmit}>
       <FoodSelect value={foodId} onChange={setFoodId} />
-      <input type="date" value={plannedDate} onChange={(e) => setPlannedDate(e.target.value)} required />
+      <input
+        type="date"
+        value={plannedDate}
+        min={mealPlan.start_date}
+        max={mealPlan.end_date}
+        onChange={(e) => setPlannedDate(e.target.value)}
+        required
+      />
+      {dateError && <p style={{ color: "red" }}>{dateError}</p>}
       <select value={mealType} onChange={(e) => setMealType(e.target.value as (typeof MEAL_TYPES)[number])}>
         {MEAL_TYPES.map((t) => (
           <option key={t} value={t}>{t[0].toUpperCase() + t.slice(1)}</option>
