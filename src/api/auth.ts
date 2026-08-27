@@ -4,7 +4,21 @@ interface LoginResponse {
   token: string;
 }
 
-// Send a login request, return the token on success, throw an error on failure
+async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
+  try {
+    const data = await response.json();
+    if (data?.detail) return data.detail;
+    // DRF field errors look like { username: ["already exists"], password: [...] }
+    const firstField = Object.values(data)[0];
+    if (Array.isArray(firstField) && typeof firstField[0] === "string") {
+      return firstField[0];
+    }
+  } catch {
+    // response body wasn't JSON — fall through to the fallback
+  }
+  return fallback;
+}
+
 export async function login(username: string, password: string): Promise<string> {
   const response = await fetch(`${API_BASE}/login/`, {
     method: "POST",
@@ -13,14 +27,13 @@ export async function login(username: string, password: string): Promise<string>
   });
 
   if (!response.ok) {
-    throw new Error("Invalid username or password");
+    throw new Error(await extractErrorMessage(response, "Invalid username or password"));
   }
 
   const data: LoginResponse = await response.json();
   return data.token;
 }
 
-// Register a new user
 export async function register(username: string, email: string, password: string): Promise<string> {
   const response = await fetch(`${API_BASE}/register/`, {
     method: "POST",
@@ -29,13 +42,12 @@ export async function register(username: string, email: string, password: string
   });
 
   if (!response.ok) {
-    throw new Error("Registration failed");
+    throw new Error(await extractErrorMessage(response, "Registration failed"));
   }
 
   return login(username, password);
 }
 
-// Log out — needs the current token to authorize the request
 export async function logout(token: string): Promise<void> {
   const response = await fetch(`${API_BASE}/logout/`, {
     method: "POST",
