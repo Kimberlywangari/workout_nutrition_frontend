@@ -1,18 +1,16 @@
 import type { LoggedMeal } from "../types/meal";
+import { API_BASE, type PaginatedResponse } from "./http";
 
-const API_BASE = "http://localhost:8000/api";
+export async function fetchLoggedMeals(
+  token: string,
+  { date = "", page = 1, pageSize = 5 }: { date?: string; page?: number; pageSize?: number } = {}
+): Promise<PaginatedResponse<LoggedMeal>> {
+  const url = new URL(`${API_BASE}/logged-meals/`);
+  if (date) url.searchParams.set("date", date);
+  url.searchParams.set("page", String(page));
+  url.searchParams.set("page_size", String(pageSize));
 
-// DRF's default pagination wraps list responses in this envelope,
-// rather than returning a plain array directly.
-interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
-
-export async function fetchLoggedMeals(token: string): Promise<LoggedMeal[]> {
-  const response = await fetch(`${API_BASE}/logged-meals/`, {
+  const response = await fetch(url, {
     headers: { Authorization: `Token ${token}` },
   });
 
@@ -23,8 +21,7 @@ export async function fetchLoggedMeals(token: string): Promise<LoggedMeal[]> {
     throw new Error("Failed to load meals");
   }
 
-  const data: PaginatedResponse<LoggedMeal> = await response.json();
-  return data.results;
+  return response.json();
 }
 
 export async function createMeal(

@@ -17,19 +17,6 @@ export async function fetchMealPlans(
 
 export async function createMealPlan(
   token: string,
-  plan: { name: string; start_date: string; end_date: string }
-): Promise<MealPlan> {
-  const response = await fetch(`${API_BASE}/meal-plans/`, {
-    method: "POST",
-    headers: authHeaders(token),
-    body: JSON.stringify(plan),
-  });
-  await handleAuthed(response, "Couldn't save meal plan — you may already have one with that name.");
-  return response.json();
-}
-
-export async function createMealPlan(
-  token: string,
   plan: { name: string; start_date: string; end_date: string; trainee_id?: number }
 ): Promise<MealPlan> {
   const response = await fetch(`${API_BASE}/meal-plans/`, {
