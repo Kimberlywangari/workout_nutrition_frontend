@@ -5,6 +5,9 @@ import { DateFilter } from "./components/DateFilter";
 import { Pagination } from "./components/Pagination";
 import { AuthPage } from "./components/AuthPage";
 import { LogMealForm } from "./components/LogMealForm";
+import { MealItemsPanel } from "./components/MealItemsPanel";
+import { FoodForm } from "./components/FoodForm";
+import { MealPlanner } from "./components/MealPlanner";
 import { useAuth } from "./context/AuthContext";
 import "./App.css";
 
@@ -17,6 +20,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [expandedMealId, setExpandedMealId] = useState<number | null>(null);
 
   const loadMeals = useCallback(() => {
     if (!token) return;
@@ -73,7 +77,12 @@ function App() {
       {!loading && !error && (
         <>
           <DateFilter selectedDate={selectedDate} onChange={handleDateChange} />
-          <MealListWithCalories meals={paginatedMeals} />
+          <MealListWithCalories
+            meals={paginatedMeals}
+            expandedMealId={expandedMealId}
+            onToggle={(id) => setExpandedMealId(expandedMealId === id ? null : id)}
+            onItemsChanged={loadMeals}
+          />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -81,17 +90,37 @@ function App() {
           />
         </>
       )}
+
+      <h2>Foods</h2>
+      <FoodForm onFoodCreated={() => {}} />
+
+      <MealPlanner />
     </div>
   );
 }
 
-function MealListWithCalories({ meals }: { meals: LoggedMeal[] }) {
+function MealListWithCalories({
+  meals,
+  expandedMealId,
+  onToggle,
+  onItemsChanged,
+}: {
+  meals: LoggedMeal[];
+  expandedMealId: number | null;
+  onToggle: (id: number) => void;
+  onItemsChanged: () => void;
+}) {
   if (meals.length === 0) return <p>No meals found for this date.</p>;
   return (
     <ul>
       {meals.map((meal) => (
         <li key={meal.id}>
-          <strong>{meal.date}</strong> — {getMealCalories(meal).toFixed(0)} kcal ({meal.meal_type})
+          <button type="button" onClick={() => onToggle(meal.id)}>
+            <strong>{meal.date}</strong> — {getMealCalories(meal).toFixed(0)} kcal ({meal.meal_type})
+          </button>
+          {expandedMealId === meal.id && (
+            <MealItemsPanel meal={meal} onChanged={onItemsChanged} />
+          )}
         </li>
       ))}
     </ul>
