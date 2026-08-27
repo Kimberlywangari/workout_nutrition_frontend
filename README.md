@@ -1,75 +1,91 @@
-# React + TypeScript + Vite
+# Workout & Nutrition Tracker — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript single-page app for logging meals, browsing/adding
+foods, and building meal plans, backed by the Django REST Framework API in
+the sibling `workout_nutrition_log_api` repo. Supports two roles: trainees
+log their own meals; trainers view their trainees' progress instead.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript, built with Vite
+- `react-router-dom` for client-side routing
+- Vitest + `@testing-library/react` for tests
+- No external state library — auth state lives in a `Context`
+  (`src/context/AuthContext.tsx`); everything else is local component state
 
-## React Compiler
+## Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Install dependencies:
+   ```
+   npm install
+   ```
+2. Make sure the backend is running at `http://localhost:8000` (see its
+   README) — the API base URL is set in `src/api/http.ts`.
+3. Start the dev server:
+   ```
+   npm run dev
+   ```
+   Runs at `http://localhost:5173` by default. The backend's CORS config
+   expects this exact port.
 
-## Expanding the ESLint configuration
+## Scripts
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Command | Does |
+|---|---|
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Type-check (`tsc -b`) then production build |
+| `npm test` | Run the Vitest test suite |
+| `npm run lint` | ESLint |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project layout
 
 ```
+src/
+  api/          One file per resource — fetch calls, auth, token storage
+  components/   Forms, list views, page-level route components
+  context/      AuthContext — token, role, login/logout state
+  types/        Shared TypeScript types matching the backend's serializers
+  App.tsx       Route definitions
+  main.tsx      Entry point — wraps the app in BrowserRouter + AuthProvider
+```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Routing
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `/login` — login/register (public; redirects to `/meals` if already
+  logged in)
+- `/meals`, `/foods`, `/plans` — the three main views, all wrapped in
+  `ProtectedRoute` (`src/components/ProtectedRoute.tsx`), which redirects
+  unauthenticated users to `/login`
+- Any unmatched path redirects to `/meals` (if logged in) or `/login`
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+`AppLayout.tsx` renders the persistent nav bar and logout button around
+whichever route is active.
+
+## Auth
+
+Token-based, matching the backend. `AuthContext` holds the token (persisted
+via `src/api/token.ts`) and exposes `login`/`logout`/role info to the rest
+of the app. Both `LoginForm` and `RegisterForm` validate required fields
+client-side before calling the API, and surface server-side validation
+errors (e.g. "username already taken") separately from client-side ones.
+
+## Testing
 
 ```
+npm test
+```
+
+- `src/api/*.test.ts` — tests the fetch functions directly, mocking
+  `global.fetch`
+- `src/components/*.test.tsx` — tests form components with
+  `@testing-library/react`, mocking the API/auth modules rather than
+  `fetch` directly, covering valid submit, client-validation failure, and
+  server-rejected submit for both `LoginForm` and `RegisterForm`
+- `ProtectedRoute.test.tsx` — confirms unauthenticated users are redirected
+  and authenticated users see the protected content
+
+## Known environment note
+
+If you unzip/clone this on a different OS/architecture than it was
+installed on, delete `node_modules` and reinstall — some dependencies ship
+platform-specific native binaries that won't run cross-platform.
