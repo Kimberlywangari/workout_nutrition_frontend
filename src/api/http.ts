@@ -36,7 +36,10 @@ export async function parseErrorResponse(response: Response, fallback: string): 
 
     if (typeof data?.detail === "string") {
       message = data.detail;
-    } else if (Array.isArray(data?.non_field_errors) && typeof data.non_field_errors[0] === "string") {
+    } else if (
+      Array.isArray(data?.non_field_errors) &&
+      typeof data.non_field_errors[0] === "string"
+    ) {
       message = data.non_field_errors[0];
     }
 

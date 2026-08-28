@@ -14,7 +14,6 @@ export interface MealItem {
   quantity_g: number;
 }
 
-
 export interface LoggedMeal {
   id: number;
   user: string;

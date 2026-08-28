@@ -3,8 +3,12 @@ import { API_BASE, authHeaders, handleAuthed, type PaginatedResponse } from "./h
 
 export async function fetchPlannedMeals(
   token: string,
-  { mealPlanId, mealType = "", page = 1, pageSize = 5 }:
-    { mealPlanId: number; mealType?: string; page?: number; pageSize?: number }
+  {
+    mealPlanId,
+    mealType = "",
+    page = 1,
+    pageSize = 5,
+  }: { mealPlanId: number; mealType?: string; page?: number; pageSize?: number }
 ): Promise<PaginatedResponse<PlannedMeal>> {
   const url = new URL(`${API_BASE}/planned-meals/`);
   url.searchParams.set("meal_plan", String(mealPlanId));
@@ -19,7 +23,13 @@ export async function fetchPlannedMeals(
 
 export async function createPlannedMeal(
   token: string,
-  planned: { meal_plan: number; food_id: number; planned_date: string; meal_type: string; quantity_g: number }
+  planned: {
+    meal_plan: number;
+    food_id: number;
+    planned_date: string;
+    meal_type: string;
+    quantity_g: number;
+  }
 ): Promise<PlannedMeal> {
   const response = await fetch(`${API_BASE}/planned-meals/`, {
     method: "POST",

@@ -30,12 +30,12 @@ log their own meals; trainers view their trainees' progress instead.
 
 ## Scripts
 
-| Command | Does |
-|---|---|
-| `npm run dev` | Start the Vite dev server |
+| Command         | Does                                        |
+| --------------- | ------------------------------------------- |
+| `npm run dev`   | Start the Vite dev server                   |
 | `npm run build` | Type-check (`tsc -b`) then production build |
-| `npm test` | Run the Vitest test suite |
-| `npm run lint` | ESLint |
+| `npm test`      | Run the Vitest test suite                   |
+| `npm run lint`  | ESLint                                      |
 
 ## Project layout
 

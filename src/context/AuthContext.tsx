@@ -22,7 +22,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRole(null);
       return;
     }
-    fetchMyProfile(token).then((p) => setRole(p.role)).catch(() => setRole(null));
+    fetchMyProfile(token)
+      .then((p) => setRole(p.role))
+      .catch(() => setRole(null));
   }, [token]);
 
   function setToken(newToken: string) {

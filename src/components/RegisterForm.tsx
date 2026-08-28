@@ -36,7 +36,9 @@ export function RegisterForm() {
 
   useEffect(() => {
     if (role === "trainee") {
-      fetchTrainers().then(setTrainers).catch(() => setServerError("Couldn't load the trainer list"));
+      fetchTrainers()
+        .then(setTrainers)
+        .catch(() => setServerError("Couldn't load the trainer list"));
     }
   }, [role]);
 
@@ -54,7 +56,10 @@ export function RegisterForm() {
     setLoading(true);
     try {
       const token = await register(
-        username, email, password, role,
+        username,
+        email,
+        password,
+        role,
         role === "trainee" ? (trainerId as number) : undefined
       );
       setToken(token);
@@ -67,25 +72,59 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+      <input
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+      />
       <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
 
-      <select value={role} onChange={(e) => { setRole(e.target.value as Role); setTrainerId(""); }}>
+      <select
+        aria-label="Role"
+        value={role}
+        onChange={(e) => {
+          setRole(e.target.value as Role);
+          setTrainerId("");
+        }}
+      >
         <option value="trainee">Trainee</option>
         <option value="trainer">Trainer</option>
       </select>
 
       {role === "trainee" && (
-        <select value={trainerId} onChange={(e) => setTrainerId(e.target.value ? Number(e.target.value) : "")}>
+        <select
+          aria-label="Trainer"
+          value={trainerId}
+          onChange={(e) => setTrainerId(e.target.value ? Number(e.target.value) : "")}
+        >
           <option value="">Select a trainer...</option>
-          {trainers.map((t) => <option key={t.id} value={t.id}>{t.username}</option>)}
+          {trainers.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.username}
+            </option>
+          ))}
         </select>
       )}
 
-      <button type="submit" disabled={loading}>{loading ? "Registering..." : "Register"}</button>
-      {clientError && <p role="alert" style={{ color: "red" }}>{clientError}</p>}
-      {serverError && <p role="alert" style={{ color: "red" }}>{serverError}</p>}
+      <button type="submit" disabled={loading}>
+        {loading ? "Registering..." : "Register"}
+      </button>
+      {clientError && (
+        <p role="alert" style={{ color: "red" }}>
+          {clientError}
+        </p>
+      )}
+      {serverError && (
+        <p role="alert" style={{ color: "red" }}>
+          {serverError}
+        </p>
+      )}
     </form>
   );
 }

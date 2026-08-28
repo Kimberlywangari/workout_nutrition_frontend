@@ -50,7 +50,9 @@ export function PlannedMealForm({ mealPlan, onPlanned }: PlannedMealFormProps) {
         meal_type: mealType,
         quantity_g: Number(quantity),
       });
-      setFoodId(""); setPlannedDate(""); setQuantity("");
+      setFoodId("");
+      setPlannedDate("");
+      setQuantity("");
       onPlanned();
     } catch (err) {
       if (err instanceof ApiError) {
@@ -76,14 +78,27 @@ export function PlannedMealForm({ mealPlan, onPlanned }: PlannedMealFormProps) {
         required
       />
       {dateError && <p style={{ color: "red" }}>{dateError}</p>}
-      <select value={mealType} onChange={(e) => setMealType(e.target.value as (typeof MEAL_TYPES)[number])}>
+      <select
+        value={mealType}
+        onChange={(e) => setMealType(e.target.value as (typeof MEAL_TYPES)[number])}
+      >
         {MEAL_TYPES.map((t) => (
-          <option key={t} value={t}>{t[0].toUpperCase() + t.slice(1)}</option>
+          <option key={t} value={t}>
+            {t[0].toUpperCase() + t.slice(1)}
+          </option>
         ))}
       </select>
-      <input type="number" step="any" placeholder="Quantity (g)" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+      <input
+        type="number"
+        step="any"
+        placeholder="Quantity (g)"
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
+      />
       {quantityError && <p style={{ color: "red" }}>{quantityError}</p>}
-      <button type="submit" disabled={loading || foodId === ""}>{loading ? "Saving..." : "Add planned meal"}</button>
+      <button type="submit" disabled={loading || foodId === ""}>
+        {loading ? "Saving..." : "Add planned meal"}
+      </button>
       {formError && <p style={{ color: "red" }}>{formError}</p>}
     </form>
   );

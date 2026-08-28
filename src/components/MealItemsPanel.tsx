@@ -32,7 +32,11 @@ export function MealItemsPanel({ meal, onChanged }: MealItemsPanelProps) {
     setQuantityError(null);
     setFormError(null);
     try {
-      await createMealItem(token, { logged_meal: meal.id, food_id: foodId, quantity_g: Number(quantity) });
+      await createMealItem(token, {
+        logged_meal: meal.id,
+        food_id: foodId,
+        quantity_g: Number(quantity),
+      });
       setFoodId("");
       setQuantity("");
       onChanged();
@@ -65,7 +69,9 @@ export function MealItemsPanel({ meal, onChanged }: MealItemsPanelProps) {
           {meal.items.map((item) => (
             <li key={item.id}>
               {item.food.name} — {item.quantity_g}g
-              <button type="button" onClick={() => handleRemove(item.id)}>Remove</button>
+              <button type="button" onClick={() => handleRemove(item.id)}>
+                Remove
+              </button>
             </li>
           ))}
         </ul>
@@ -73,9 +79,17 @@ export function MealItemsPanel({ meal, onChanged }: MealItemsPanelProps) {
 
       <form onSubmit={handleAdd}>
         <FoodSelect value={foodId} onChange={setFoodId} />
-        <input type="number" step="any" placeholder="Quantity (g)" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+        <input
+          type="number"
+          step="any"
+          placeholder="Quantity (g)"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+        />
         {quantityError && <p style={{ color: "red" }}>{quantityError}</p>}
-        <button type="submit" disabled={loading || foodId === ""}>{loading ? "Adding..." : "Add food to meal"}</button>
+        <button type="submit" disabled={loading || foodId === ""}>
+          {loading ? "Adding..." : "Add food to meal"}
+        </button>
         {formError && <p style={{ color: "red" }}>{formError}</p>}
       </form>
     </div>

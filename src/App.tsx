@@ -13,10 +13,7 @@ function App() {
 
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={isLoggedIn ? <Navigate to="/meals" replace /> : <AuthPage />}
-      />
+      <Route path="/login" element={isLoggedIn ? <Navigate to="/meals" replace /> : <AuthPage />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>

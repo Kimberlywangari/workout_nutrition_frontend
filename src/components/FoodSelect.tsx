@@ -68,15 +68,23 @@ export function FoodSelect({ value, onChange }: FoodSelectProps) {
       {open && results.length > 0 && (
         <ul
           style={{
-            position: "absolute", zIndex: 1, background: "white",
-            border: "1px solid #ccc", borderRadius: 6, width: "100%",
-            maxHeight: 180, overflowY: "auto", margin: 0, padding: "0.25rem 0",
+            position: "absolute",
+            zIndex: 1,
+            background: "white",
+            border: "1px solid #ccc",
+            borderRadius: 6,
+            width: "100%",
+            maxHeight: 180,
+            overflowY: "auto",
+            margin: 0,
+            padding: "0.25rem 0",
           }}
         >
           {results.map((food) => (
             <li key={food.id}>
               <button type="button" onClick={() => handlePick(food)}>
-                {food.name}{food.brand ? ` (${food.brand})` : ""}
+                {food.name}
+                {food.brand ? ` (${food.brand})` : ""}
               </button>
             </li>
           ))}

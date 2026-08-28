@@ -3,7 +3,11 @@ import { API_BASE, authHeaders, handleAuthed, type PaginatedResponse } from "./h
 
 export async function fetchMealPlans(
   token: string,
-  { search = "", page = 1, pageSize = 5 }: { search?: string; page?: number; pageSize?: number } = {}
+  {
+    search = "",
+    page = 1,
+    pageSize = 5,
+  }: { search?: string; page?: number; pageSize?: number } = {}
 ): Promise<PaginatedResponse<MealPlan>> {
   const url = new URL(`${API_BASE}/meal-plans/`);
   if (search) url.searchParams.set("name", search);
@@ -24,6 +28,9 @@ export async function createMealPlan(
     headers: authHeaders(token),
     body: JSON.stringify(plan),
   });
-  await handleAuthed(response, "Couldn't save meal plan — you may already have one with that name.");
+  await handleAuthed(
+    response,
+    "Couldn't save meal plan — you may already have one with that name."
+  );
   return response.json();
 }

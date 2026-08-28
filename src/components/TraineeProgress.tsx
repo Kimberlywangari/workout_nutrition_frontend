@@ -24,19 +24,30 @@ export function TraineeProgress() {
     setLoading(true);
     setError(null);
     fetchLoggedMeals(token, { date: selectedDate, page, pageSize: PAGE_SIZE })
-      .then((data) => { setMeals(data.results); setCount(data.count); })
+      .then((data) => {
+        setMeals(data.results);
+        setCount(data.count);
+      })
       .catch(() => setError("Couldn't load trainee meals"))
       .finally(() => setLoading(false));
   }, [token, selectedDate, page]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
   return (
     <div>
       <h2>Trainee Progress</h2>
-      <DateFilter selectedDate={selectedDate} onChange={(d) => { setSelectedDate(d); setPage(1); }} />
+      <DateFilter
+        selectedDate={selectedDate}
+        onChange={(d) => {
+          setSelectedDate(d);
+          setPage(1);
+        }}
+      />
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       {!loading && !error && (
@@ -44,7 +55,8 @@ export function TraineeProgress() {
           <ul>
             {meals.map((meal) => (
               <li key={meal.id}>
-                <strong>{meal.user}</strong> — {meal.date} — {getMealCalories(meal).toFixed(0)} kcal ({meal.meal_type})
+                <strong>{meal.user}</strong> — {meal.date} — {getMealCalories(meal).toFixed(0)} kcal
+                ({meal.meal_type})
               </li>
             ))}
           </ul>

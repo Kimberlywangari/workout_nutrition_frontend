@@ -1,6 +1,8 @@
 import { API_BASE } from "./http";
 
-interface LoginResponse { token: string; }
+interface LoginResponse {
+  token: string;
+}
 
 async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
   try {
@@ -8,7 +10,9 @@ async function extractErrorMessage(response: Response, fallback: string): Promis
     if (data?.detail) return data.detail;
     const firstField = Object.values(data)[0];
     if (Array.isArray(firstField) && typeof firstField[0] === "string") return firstField[0];
-  } catch { /* not JSON */ }
+  } catch {
+    /* not JSON */
+  }
   return fallback;
 }
 
@@ -18,7 +22,8 @@ export async function login(username: string, password: string): Promise<string>
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
   });
-  if (!response.ok) throw new Error(await extractErrorMessage(response, "Invalid username or password"));
+  if (!response.ok)
+    throw new Error(await extractErrorMessage(response, "Invalid username or password"));
   const data: LoginResponse = await response.json();
   return data.token;
 }
@@ -34,7 +39,10 @@ export async function register(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      username, email, password, role,
+      username,
+      email,
+      password,
+      role,
       ...(trainerId ? { trainer_id: trainerId } : {}),
     }),
   });

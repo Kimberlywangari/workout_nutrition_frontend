@@ -8,7 +8,9 @@ interface FoodFormProps {
   onFoodCreated: (food: Food) => void;
 }
 
-type FieldErrors = Partial<Record<"name" | "brand" | "calories_per_100g" | "protein_g" | "carbs_g" | "fat_g", string>>;
+type FieldErrors = Partial<
+  Record<"name" | "brand" | "calories_per_100g" | "protein_g" | "carbs_g" | "fat_g", string>
+>;
 
 export function FoodForm({ onFoodCreated }: FoodFormProps) {
   const { token } = useAuth();
@@ -58,7 +60,12 @@ export function FoodForm({ onFoodCreated }: FoodFormProps) {
         fat_g: Number(fat),
       });
       onFoodCreated(food);
-      setName(""); setBrand(""); setCalories(""); setProtein(""); setCarbs(""); setFat("");
+      setName("");
+      setBrand("");
+      setCalories("");
+      setProtein("");
+      setCarbs("");
+      setFat("");
     } catch (err) {
       if (err instanceof ApiError) {
         setFieldErrors(err.fieldErrors as FieldErrors);
@@ -73,24 +80,65 @@ export function FoodForm({ onFoodCreated }: FoodFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input placeholder="Food name" value={name} onChange={(e) => setName(e.target.value)} required />
+      <input
+        placeholder="Food name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
       {fieldErrors.name && <p style={{ color: "red" }}>{fieldErrors.name}</p>}
 
-      <input placeholder="Brand (optional)" value={brand} onChange={(e) => setBrand(e.target.value)} />
+      <input
+        placeholder="Brand (optional)"
+        value={brand}
+        onChange={(e) => setBrand(e.target.value)}
+      />
 
-      <input type="number" step="any" placeholder="Calories per 100g" value={calories} onChange={(e) => setCalories(e.target.value)} required />
-      {fieldErrors.calories_per_100g && <p style={{ color: "red" }}>{fieldErrors.calories_per_100g}</p>}
+      <input
+        type="number"
+        step="any"
+        placeholder="Calories per 100g"
+        value={calories}
+        onChange={(e) => setCalories(e.target.value)}
+        required
+      />
+      {fieldErrors.calories_per_100g && (
+        <p style={{ color: "red" }}>{fieldErrors.calories_per_100g}</p>
+      )}
 
-      <input type="number" step="any" placeholder="Protein (g)" value={protein} onChange={(e) => setProtein(e.target.value)} required />
+      <input
+        type="number"
+        step="any"
+        placeholder="Protein (g)"
+        value={protein}
+        onChange={(e) => setProtein(e.target.value)}
+        required
+      />
       {fieldErrors.protein_g && <p style={{ color: "red" }}>{fieldErrors.protein_g}</p>}
 
-      <input type="number" step="any" placeholder="Carbs (g)" value={carbs} onChange={(e) => setCarbs(e.target.value)} required />
+      <input
+        type="number"
+        step="any"
+        placeholder="Carbs (g)"
+        value={carbs}
+        onChange={(e) => setCarbs(e.target.value)}
+        required
+      />
       {fieldErrors.carbs_g && <p style={{ color: "red" }}>{fieldErrors.carbs_g}</p>}
 
-      <input type="number" step="any" placeholder="Fat (g)" value={fat} onChange={(e) => setFat(e.target.value)} required />
+      <input
+        type="number"
+        step="any"
+        placeholder="Fat (g)"
+        value={fat}
+        onChange={(e) => setFat(e.target.value)}
+        required
+      />
       {fieldErrors.fat_g && <p style={{ color: "red" }}>{fieldErrors.fat_g}</p>}
 
-      <button type="submit" disabled={loading}>{loading ? "Saving..." : "Add food"}</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Saving..." : "Add food"}
+      </button>
       {formError && <p style={{ color: "red" }}>{formError}</p>}
     </form>
   );

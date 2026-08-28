@@ -3,7 +3,11 @@ import { API_BASE, authHeaders, handleAuthed, type PaginatedResponse } from "./h
 
 export async function fetchFoods(
   token: string,
-  { search = "", page = 1, pageSize = 5 }: { search?: string; page?: number; pageSize?: number } = {}
+  {
+    search = "",
+    page = 1,
+    pageSize = 5,
+  }: { search?: string; page?: number; pageSize?: number } = {}
 ): Promise<PaginatedResponse<Food>> {
   const url = new URL(`${API_BASE}/foods/`);
   if (search) url.searchParams.set("name", search);
@@ -17,13 +21,23 @@ export async function fetchFoods(
 
 export async function createFood(
   token: string,
-  food: { name: string; brand: string; calories_per_100g: number; protein_g: number; carbs_g: number; fat_g: number }
+  food: {
+    name: string;
+    brand: string;
+    calories_per_100g: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+  }
 ): Promise<Food> {
   const response = await fetch(`${API_BASE}/foods/`, {
     method: "POST",
     headers: authHeaders(token),
     body: JSON.stringify(food),
   });
-  await handleAuthed(response, "Couldn't save food — it may already exist with that name and brand.");
+  await handleAuthed(
+    response,
+    "Couldn't save food — it may already exist with that name and brand."
+  );
   return response.json();
 }

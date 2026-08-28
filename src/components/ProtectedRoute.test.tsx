@@ -32,7 +32,11 @@ function renderAt(path: string) {
 describe("ProtectedRoute", () => {
   it("redirects unauthenticated users to /login", () => {
     mockedUseAuth.mockReturnValue({
-      token: null, isLoggedIn: false, role: null, setToken: vi.fn(), logout: vi.fn(),
+      token: null,
+      isLoggedIn: false,
+      role: null,
+      setToken: vi.fn(),
+      logout: vi.fn(),
     });
 
     renderAt("/meals");
@@ -43,7 +47,11 @@ describe("ProtectedRoute", () => {
 
   it("renders the protected content for authenticated users", () => {
     mockedUseAuth.mockReturnValue({
-      token: "abc", isLoggedIn: true, role: "trainee", setToken: vi.fn(), logout: vi.fn(),
+      token: "abc",
+      isLoggedIn: true,
+      role: "trainee",
+      setToken: vi.fn(),
+      logout: vi.fn(),
     });
 
     renderAt("/meals");

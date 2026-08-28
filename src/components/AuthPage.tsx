@@ -10,10 +10,7 @@ export function AuthPage() {
       <div className="auth-card">
         <h1>Workout & Nutrition Tracker</h1>
         <div className="auth-tabs">
-          <button
-            className={mode === "login" ? "active" : ""}
-            onClick={() => setMode("login")}
-          >
+          <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>
             Log In
           </button>
           <button

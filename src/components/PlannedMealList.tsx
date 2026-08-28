@@ -23,12 +23,19 @@ export function PlannedMealList({ mealPlan, refreshKey }: PlannedMealListProps) 
   const load = useCallback(() => {
     if (!token) return;
     fetchPlannedMeals(token, { mealPlanId: mealPlan.id, mealType, page, pageSize: PAGE_SIZE })
-      .then((data) => { setItems(data.results); setCount(data.count); })
+      .then((data) => {
+        setItems(data.results);
+        setCount(data.count);
+      })
       .catch(() => setError("Couldn't load planned meals"));
   }, [token, mealPlan.id, mealType, page]);
 
-  useEffect(() => { load(); }, [load, refreshKey]);
-  useEffect(() => { setPage(1); }, [mealType]);
+  useEffect(() => {
+    load();
+  }, [load, refreshKey]);
+  useEffect(() => {
+    setPage(1);
+  }, [mealType]);
 
   const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
@@ -36,13 +43,17 @@ export function PlannedMealList({ mealPlan, refreshKey }: PlannedMealListProps) 
     <div>
       <select value={mealType} onChange={(e) => setMealType(e.target.value)}>
         {MEAL_TYPES.map((t) => (
-          <option key={t} value={t}>{t ? t[0].toUpperCase() + t.slice(1) : "All meal types"}</option>
+          <option key={t} value={t}>
+            {t ? t[0].toUpperCase() + t.slice(1) : "All meal types"}
+          </option>
         ))}
       </select>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <ul>
         {items.map((pm) => (
-          <li key={pm.id}>{pm.planned_date} — {pm.meal_type}: {pm.food.name} ({pm.quantity_g}g)</li>
+          <li key={pm.id}>
+            {pm.planned_date} — {pm.meal_type}: {pm.food.name} ({pm.quantity_g}g)
+          </li>
         ))}
       </ul>
       <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />

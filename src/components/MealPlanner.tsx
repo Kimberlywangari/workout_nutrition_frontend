@@ -33,19 +33,28 @@ export function MealPlanner() {
 
   useEffect(() => {
     if (role === "trainer" && token) {
-      fetchMyTrainees(token).then(setTrainees).catch(() => setFormError("Couldn't load your trainees"));
+      fetchMyTrainees(token)
+        .then(setTrainees)
+        .catch(() => setFormError("Couldn't load your trainees"));
     }
   }, [role, token]);
 
   const loadPlans = useCallback(() => {
     if (!token) return;
     fetchMealPlans(token, { search: debouncedSearch, page, pageSize: PAGE_SIZE })
-      .then((data) => { setPlans(data.results); setCount(data.count); })
+      .then((data) => {
+        setPlans(data.results);
+        setCount(data.count);
+      })
       .catch(() => setFormError("Couldn't load meal plans"));
   }, [token, debouncedSearch, page]);
 
-  useEffect(() => { loadPlans(); }, [loadPlans]);
-  useEffect(() => { setPage(1); }, [debouncedSearch]);
+  useEffect(() => {
+    loadPlans();
+  }, [loadPlans]);
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
 
   const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
@@ -66,13 +75,20 @@ export function MealPlanner() {
     setFormError(null);
     try {
       await createMealPlan(token, {
-        name, start_date: startDate, end_date: endDate,
+        name,
+        start_date: startDate,
+        end_date: endDate,
         ...(role === "trainer" ? { trainee_id: traineeId as number } : {}),
       });
-      setName(""); setStartDate(""); setEndDate(""); setTraineeId("");
+      setName("");
+      setStartDate("");
+      setEndDate("");
+      setTraineeId("");
       loadPlans();
     } catch (err) {
-      setFormError(err instanceof ApiError ? err.message : "Couldn't save meal plan, please try again");
+      setFormError(
+        err instanceof ApiError ? err.message : "Couldn't save meal plan, please try again"
+      );
     } finally {
       setLoading(false);
     }
@@ -83,31 +99,62 @@ export function MealPlanner() {
       <h2>Meal Plans</h2>
       <form onSubmit={handleCreate}>
         {role === "trainer" && (
-          <select value={traineeId} onChange={(e) => setTraineeId(e.target.value ? Number(e.target.value) : "")} required>
+          <select
+            value={traineeId}
+            onChange={(e) => setTraineeId(e.target.value ? Number(e.target.value) : "")}
+            required
+          >
             <option value="">Select a trainee...</option>
-            {trainees.map((t) => <option key={t.id} value={t.id}>{t.username}</option>)}
+            {trainees.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.username}
+              </option>
+            ))}
           </select>
         )}
-        <input placeholder="Plan name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+        <input
+          placeholder="Plan name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          required
+        />
         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
         {dateError && <p style={{ color: "red" }}>{dateError}</p>}
-        <button type="submit" disabled={loading}>{loading ? "Saving..." : "Create meal plan"}</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Saving..." : "Create meal plan"}
+        </button>
         {formError && <p style={{ color: "red" }}>{formError}</p>}
       </form>
 
-      <input type="text" placeholder="Search plans by name..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      <input
+        type="text"
+        placeholder="Search plans by name..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
       <ul>
         {plans.map((plan) => (
           <li key={plan.id}>
-            <button type="button" onClick={() => setExpandedId(expandedId === plan.id ? null : plan.id)}>
+            <button
+              type="button"
+              onClick={() => setExpandedId(expandedId === plan.id ? null : plan.id)}
+            >
               {plan.name} ({plan.start_date} → {plan.end_date})
             </button>
             {expandedId === plan.id && (
               <div>
                 <PlannedMealList mealPlan={plan} refreshKey={plannedRefreshKey} />
-                <PlannedMealForm mealPlan={plan} onPlanned={() => setPlannedRefreshKey((k) => k + 1)} />
+                <PlannedMealForm
+                  mealPlan={plan}
+                  onPlanned={() => setPlannedRefreshKey((k) => k + 1)}
+                />
               </div>
             )}
           </li>

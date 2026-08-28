@@ -1,7 +1,6 @@
 interface DateFilterProps {
-  selectedDate: string;       
-  onChange: (date: string) => void; 
-
+  selectedDate: string;
+  onChange: (date: string) => void;
 }
 
 // This component holds NO state of its own — it just displays what it's told (selectedDate)
@@ -16,9 +15,7 @@ export function DateFilter({ selectedDate, onChange }: DateFilterProps) {
         value={selectedDate}
         onChange={(e) => onChange(e.target.value)}
       />
-      {selectedDate && (
-        <button onClick={() => onChange("")}>Clear</button>
-      )}
+      {selectedDate && <button onClick={() => onChange("")}>Clear</button>}
     </div>
   );
 }

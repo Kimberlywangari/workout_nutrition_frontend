@@ -47,14 +47,23 @@ export function LogMealForm({ meals, onMealCreated }: LogMealFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="date" value={date} max={today} onChange={(e) => setDate(e.target.value)} required />
-      <select value={mealType} onChange={(e) => setMealType(e.target.value)}>
+      <input
+        type="date"
+        aria-label="Date"
+        value={date}
+        max={today}
+        onChange={(e) => setDate(e.target.value)}
+        required
+      />
+      <select aria-label="Meal type" value={mealType} onChange={(e) => setMealType(e.target.value)}>
         <option value="breakfast">Breakfast</option>
         <option value="lunch">Lunch</option>
         <option value="dinner">Dinner</option>
         <option value="snack">Snack</option>
       </select>
-      <button type="submit" disabled={loading}>{loading ? "Saving..." : "Log meal"}</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Saving..." : "Log meal"}
+      </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );

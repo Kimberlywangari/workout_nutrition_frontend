@@ -26,13 +26,20 @@ export function FoodList({ refreshKey }: FoodListProps) {
     setLoading(true);
     setError(null);
     fetchFoods(token, { search: debouncedSearch, page, pageSize: PAGE_SIZE })
-      .then((data) => { setFoods(data.results); setCount(data.count); })
+      .then((data) => {
+        setFoods(data.results);
+        setCount(data.count);
+      })
       .catch(() => setError("Couldn't load foods"))
       .finally(() => setLoading(false));
   }, [token, debouncedSearch, page]);
 
-  useEffect(() => { load(); }, [load, refreshKey]);
-  useEffect(() => { setPage(1); }, [debouncedSearch]);
+  useEffect(() => {
+    load();
+  }, [load, refreshKey]);
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
 
   const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
@@ -51,7 +58,8 @@ export function FoodList({ refreshKey }: FoodListProps) {
           <ul>
             {foods.map((food) => (
               <li key={food.id}>
-                {food.name}{food.brand ? ` (${food.brand})` : ""} — {food.calories_per_100g} kcal/100g
+                {food.name}
+                {food.brand ? ` (${food.brand})` : ""} — {food.calories_per_100g} kcal/100g
               </li>
             ))}
           </ul>

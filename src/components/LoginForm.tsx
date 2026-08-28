@@ -40,11 +40,30 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-      <button type="submit" disabled={loading}>{loading ? "Logging in..." : "Log in"}</button>
-      {clientError && <p role="alert" style={{ color: "red" }}>{clientError}</p>}
-      {serverError && <p role="alert" style={{ color: "red" }}>{serverError}</p>}
+      <input
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      <button type="submit" disabled={loading}>
+        {loading ? "Logging in..." : "Log in"}
+      </button>
+      {clientError && (
+        <p role="alert" style={{ color: "red" }}>
+          {clientError}
+        </p>
+      )}
+      {serverError && (
+        <p role="alert" style={{ color: "red" }}>
+          {serverError}
+        </p>
+      )}
     </form>
   );
 }

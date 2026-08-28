@@ -23,7 +23,9 @@ export function AppLayout() {
 
       <Outlet />
 
-      <button className="logout-button" onClick={logout}>Log out</button>
+      <button className="logout-button" onClick={logout}>
+        Log out
+      </button>
     </div>
   );
 }

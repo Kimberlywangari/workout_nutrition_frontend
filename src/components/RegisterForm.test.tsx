@@ -47,7 +47,9 @@ describe("RegisterForm", () => {
     const { setToken } = setup();
 
     fireEvent.change(screen.getByPlaceholderText("Username"), { target: { value: "newtrainee" } });
-    fireEvent.change(screen.getByPlaceholderText("Email"), { target: { value: "trainee@example.com" } });
+    fireEvent.change(screen.getByPlaceholderText("Email"), {
+      target: { value: "trainee@example.com" },
+    });
     fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "supersecret" } });
 
     const trainerSelect = await screen.findByDisplayValue("Select a trainer...");
@@ -57,7 +59,11 @@ describe("RegisterForm", () => {
 
     await waitFor(() => expect(setToken).toHaveBeenCalledWith("newtoken"));
     expect(mockedRegister).toHaveBeenCalledWith(
-      "newtrainee", "trainee@example.com", "supersecret", "trainee", 1
+      "newtrainee",
+      "trainee@example.com",
+      "supersecret",
+      "trainee",
+      1
     );
   });
 
@@ -82,7 +88,9 @@ describe("RegisterForm", () => {
     setup();
 
     fireEvent.change(screen.getByPlaceholderText("Username"), { target: { value: "taken" } });
-    fireEvent.change(screen.getByPlaceholderText("Email"), { target: { value: "taken@example.com" } });
+    fireEvent.change(screen.getByPlaceholderText("Email"), {
+      target: { value: "taken@example.com" },
+    });
     fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "supersecret" } });
 
     const trainerSelect = await screen.findByDisplayValue("Select a trainer...");
