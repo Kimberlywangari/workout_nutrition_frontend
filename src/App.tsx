@@ -6,6 +6,7 @@ import { MealsPage } from "./components/MealsPage";
 import { FoodsPage } from "./components/FoodsPage";
 import { MealPlanner } from "./components/MealPlanner";
 import { useAuth } from "./context/AuthContext";
+import { WorkoutsPage } from "./components/WorkoutsPage";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
+          <Route path="/workouts" element={<WorkoutsPage />} />
           <Route path="/meals" element={<MealsPage />} />
           <Route path="/foods" element={<FoodsPage />} />
           <Route path="/plans" element={<MealPlanner />} />

@@ -13,6 +13,9 @@ export function AppLayout() {
         <NavLink to="/meals" className={({ isActive }) => (isActive ? "active" : "")}>
           Meals
         </NavLink>
+        <NavLink to="/workouts" className={({ isActive }) => (isActive ? "active" : "")}>
+          Workouts
+        </NavLink>
         <NavLink to="/foods" className={({ isActive }) => (isActive ? "active" : "")}>
           Foods
         </NavLink>
