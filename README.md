@@ -1,4 +1,4 @@
-# Workout Tracker (edited on branch A)
+# Workout Tracker
 
 A React + TypeScript single-page app for logging meals, browsing/adding
 foods, and building meal plans, backed by the Django REST Framework API in
