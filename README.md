@@ -89,3 +89,7 @@ npm test
 If you unzip/clone this on a different OS/architecture than it was
 installed on, delete `node_modules` and reinstall — some dependencies ship
 platform-specific native binaries that won't run cross-platform.
+
+
+## feature/michelle
+Added changes to readme to demonstrate pulling abd reviewing requests
