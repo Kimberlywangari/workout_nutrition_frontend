@@ -1,4 +1,4 @@
-# Workout & Nutrition Tracker — Frontend
+# Workout & Nutrition Tracker — Frontend is so funny
 
 A React + TypeScript single-page app for logging meals, browsing/adding
 foods, and building meal plans, backed by the Django REST Framework API in
