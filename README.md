@@ -5,6 +5,8 @@ foods, and building meal plans, backed by the Django REST Framework API in
 the sibling `workout_nutrition_log_api` repo. Supports two roles: trainees
 log their own meals; trainers view their trainees' progress instead.
 
+##clive changes
+Clive Misiko Mutende
 ## Stack
 
 - React 19 + TypeScript, built with Vite
