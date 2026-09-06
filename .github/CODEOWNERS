@@ -1,0 +1,7 @@
+# Default owner for everything in the repo
+* @Kimberlywangari
+
+# Ownership for specific areas, once teammates are added,
+# would look like this:
+# /src/components/  @teammate-username
+# /src/api/          @teammate-username
