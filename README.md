@@ -1,4 +1,4 @@
-# Kimberly code
+# Kimberly codez
 # Workout & Nutrition Tracker — 
 
 A React + TypeScript single-page app for logging meals, browsing/adding
