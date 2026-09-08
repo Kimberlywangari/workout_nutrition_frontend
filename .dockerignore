@@ -1,4 +1,9 @@
-FROM node:20-alpine AS builder
+node_modules
+dist
+.git
+.env*
+playwright-report
+test-resultsFROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
