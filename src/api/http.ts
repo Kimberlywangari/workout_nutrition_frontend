@@ -1,5 +1,9 @@
 export const API_BASE = "/api";
 
+export function apiUrl(path: string): URL {
+  return new URL(path, window.location.origin);
+}
+
 export function authHeaders(token: string): HeadersInit {
   return { "Content-Type": "application/json", Authorization: `Token ${token}` };
 }

@@ -1,11 +1,11 @@
 import type { LoggedMeal } from "../types/meal";
-import { API_BASE, type PaginatedResponse } from "./http";
+import { API_BASE, apiUrl, type PaginatedResponse } from "./http";
 
 export async function fetchLoggedMeals(
   token: string,
   { date = "", page = 1, pageSize = 5 }: { date?: string; page?: number; pageSize?: number } = {}
 ): Promise<PaginatedResponse<LoggedMeal>> {
-  const url = new URL(`${API_BASE}/logged-meals/`);
+  const url = apiUrl(`${API_BASE}/logged-meals/`);
   if (date) url.searchParams.set("date", date);
   url.searchParams.set("page", String(page));
   url.searchParams.set("page_size", String(pageSize));

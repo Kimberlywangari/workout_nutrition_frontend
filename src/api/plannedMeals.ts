@@ -1,5 +1,5 @@
 import type { PlannedMeal } from "../types/mealPlan";
-import { API_BASE, authHeaders, handleAuthed, type PaginatedResponse } from "./http";
+import { API_BASE, apiUrl, authHeaders, handleAuthed, type PaginatedResponse } from "./http";
 
 export async function fetchPlannedMeals(
   token: string,
@@ -10,7 +10,7 @@ export async function fetchPlannedMeals(
     pageSize = 5,
   }: { mealPlanId: number; mealType?: string; page?: number; pageSize?: number }
 ): Promise<PaginatedResponse<PlannedMeal>> {
-  const url = new URL(`${API_BASE}/planned-meals/`);
+  const url = apiUrl(`${API_BASE}/planned-meals/`);
   url.searchParams.set("meal_plan", String(mealPlanId));
   if (mealType) url.searchParams.set("meal_type", mealType);
   url.searchParams.set("page", String(page));
