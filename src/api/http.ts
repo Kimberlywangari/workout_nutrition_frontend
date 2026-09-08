@@ -1,4 +1,4 @@
-export const API_BASE = "http://localhost:8000/api";
+export const API_BASE = "/api";
 
 export function authHeaders(token: string): HeadersInit {
   return { "Content-Type": "application/json", Authorization: `Token ${token}` };
