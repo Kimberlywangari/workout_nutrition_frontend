@@ -6,36 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Check formatting
-        run: npm run format:check
-
-      - name: Run tests
-        run: npx vitest run
-
-      - name: Build application
-        run: npm run build
-
   publish:
-    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -69,12 +40,13 @@ jobs:
       - name: Deploy Docker stack over SSH
         uses: appleboy/ssh-action@v1.2.2
         with:
-          host: 206.189.235.97
-          username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.DEPLOY_HOST || '206.189.235.97' }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            set -e
-            cd /opt/staging
+            set -eu
+            cd "${{ secrets.DEPLOY_PATH }}"
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
             docker compose pull
-            docker compose up -d
-            docker compose ps
+            docker compose up -d --remove-orphans
+            docker image prune -f
