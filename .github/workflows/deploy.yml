@@ -41,13 +41,20 @@ jobs:
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.DEPLOY_HOST || '206.189.235.97' }}
+          port: 22
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           passphrase: ${{ secrets.DEPLOY_SSH_PASSPHRASE }}
+          timeout: 30s
           command_timeout: 5m
           script: |
             set -eu
-            cd "${{ secrets.DEPLOY_PATH }}"
+            deploy_path="${{ secrets.DEPLOY_PATH }}"
+            test -d "$deploy_path" || { echo 'DEPLOY_PATH does not exist'; exit 1; }
+            cd "$deploy_path"
+            test -f docker-compose.yml || { echo 'Missing docker-compose.yml; run API deployment first'; exit 1; }
+            test -f .env || { echo 'Missing production .env in DEPLOY_PATH'; exit 1; }
+            docker compose config --quiet
             exec 9>/tmp/workout-deploy.lock
             flock -w 300 9
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
